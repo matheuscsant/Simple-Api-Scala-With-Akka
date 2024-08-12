@@ -1,5 +1,6 @@
 
 // akka
+
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 // akka http
@@ -48,6 +49,11 @@ final case class User(id: Long, name: String, email: String)
       userId => complete(User(userId, "DeleteTestUser", "test@teste.com"))
     }
   }
-  Http().newServerAt("localhost", 8080).bind(concat(getUser, createUser, updateUser, deleteUser))
+
+  val routes = cors() {
+    concat(getUser, createUser, updateUser, deleteUser)
+  }
+
+  Http().newServerAt("localhost", 8080).bind(routes)
 }
 
